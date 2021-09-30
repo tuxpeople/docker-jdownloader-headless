@@ -27,8 +27,8 @@ ENV LC_ALL="C.UTF-8"
 
 # Upgrade and install dependencies
 # hadolint ignore=DL3018,DL3019
-RUN echo "@testing http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
-    apk add --no-cache --upgrade openjdk17-jre ca-certificates libstdc++ ffmpeg wget jq moreutils@testing && \
+RUN echo "@testing http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories && \
+    apk add --no-cache --upgrade openjdk17-jre@testing ca-certificates libstdc++ ffmpeg wget jq moreutils@testing && \
     mkdir -p /init && \
     mkdir -p /opt/JDownloader && \
     wget -q -O /init/JDownloader.jar --user-agent="Github Docker Image Build (https://github.com/tuxpeople)" "http://installer.jdownloader.org/JDownloader.jar" && \
