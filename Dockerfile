@@ -1,4 +1,4 @@
-FROM ghcr.io/tuxpeople/baseimage-alpine:latest
+FROM ghcr.io/tuxpeople/baseimage-alpine:3.14.3
 
 # set args
 ARG BUILD_DATE
