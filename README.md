@@ -22,7 +22,7 @@ This image allows you to have JDownloader 2 easily installed and controlled via 
 * **Where to file issues:**
   https://github.com/tuxpeople/docker-jdownloader-headless/issues
 * **Supported architectures:**
-  ```amd64```, ```armv7```, ```i386``` and ```arm64```
+  ```amd64```, ```armv7``` and ```arm64```
 
 ## Image tags
 - ```latest``` always refers to the latest tagged release.
