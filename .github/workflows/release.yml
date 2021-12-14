@@ -15,8 +15,8 @@ on:
     types: [assigned, opened, synchronize, reopened]
 
 env:
-  PLATFORMS: "linux/amd64,linux/arm/v7,linux/i386,linux/arm64"     # Build for which platforms
-  DOCKER_USER: "tdeutsch"                                          # Which user to use to login to DockerHub
+  PLATFORMS: "linux/amd64,linux/arm/v7,linux/arm64"     # Build for which platforms
+  DOCKER_USER: "tdeutsch"                               # Which user to use to login to DockerHub
 
 #####
 # To rebuild someone else's repo, do this:
