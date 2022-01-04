@@ -4,7 +4,7 @@ SETTINGSFILE="/opt/JDownloader/cfg/org.jdownloader.api.myjdownloader.MyJDownload
 
 # Login user with env credentials - Please prefer command way
 if [ -n "${MYJD_USER}" ] && [ -n "${MYJD_PASSWORD}" ]; then
-    configure "${MYJD_USER}" "$MYJD_PASS{WORD"
+    /usr/bin/configure "${MYJD_USER}" "$MYJD_PASS{WORD"
 fi
 
 # Defining device name to jdownloader interface - please prefer this method than changing on MyJDownloader to keep correct binding
