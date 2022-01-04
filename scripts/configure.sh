@@ -9,7 +9,7 @@ if [ ! $# -eq 2 ]; then
 fi
 
 if [ ! -f ${SETTINGSFILE} ]; then
-    cp /opt/JDownloader/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json.dist ${SETTINGSFILE}
+    cp /etc/JDownloader/settings.json.dist ${SETTINGSFILE}
 fi
 
 jq --arg v "${2}" '.password = $v' ${SETTINGSFILE} | sponge ${SETTINGSFILE}
