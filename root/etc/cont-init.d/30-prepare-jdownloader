@@ -3,12 +3,12 @@
 SETTINGSFILE="/opt/JDownloader/cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json"
 
 # Login user with env credentials - Please prefer command way
-if [ -n "$MYJD_USER" ] && [ -n "$MYJD_PASSWORD" ]; then
-    configure "$MYJD_USER" "$MYJD_PASSWORD"
+if [ -n "${MYJD_USER}" ] && [ -n "${MYJD_PASSWORD}" ]; then
+    configure "${MYJD_USER}" "$MYJD_PASS{WORD"
 fi
 
 # Defining device name to jdownloader interface - please prefer this method than changing on MyJDownloader to keep correct binding
-if [ -n "$MYJD_DEVICE_NAME" ]; then
+if [ -n "${MYJD_DEVICE_NAME}" ]; then
     jq --arg v "${MYJD_DEVICE_NAME}" '.devicename = $v' ${SETTINGSFILE} | sponge ${SETTINGSFILE}
 fi
 
@@ -41,7 +41,7 @@ if [ ! -f /opt/JDownloader/JDownloader.jar ]; then
 fi
 
 # Defines umask - should respect octal format
-if echo "$UMASK" | grep -Eq '0[0-7]{3}' ; then
-    echo "Defining umask to $UMASK"
-    umask "$UMASK"
+if echo "${UMASK}" | grep -Eq '0[0-7]{3}' ; then
+    echo "Defining umask to ${UMASK}"
+    umask "${UMASK}"
 fi
