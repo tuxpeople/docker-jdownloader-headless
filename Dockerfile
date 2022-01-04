@@ -44,4 +44,6 @@ COPY ./root/ /
 COPY ./config/default-config.json.dist /etc/JDownloader/settings.json.dist
 COPY ./scripts/configure.sh /usr/bin/configure
 
+
+
 EXPOSE 3129
