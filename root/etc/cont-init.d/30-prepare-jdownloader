@@ -20,7 +20,7 @@ fi
 
 # Check if settings file exists
 if [ ! -f ${SETTINGSFILE} ]; then
-    cp /opt/JDownloader/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json.dist ${SETTINGSFILE}
+    cp /etc/JDownloader/settings.json.dist ${SETTINGSFILE}
 fi
 
 # Check JDownloader.jar integrity and removes it in case it's not

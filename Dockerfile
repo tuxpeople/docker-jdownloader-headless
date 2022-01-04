@@ -41,7 +41,7 @@ RUN echo "@community http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /et
 # which is compiled against libstdc++
 COPY ./ressources/${TARGETARCH}/*.jar /opt/JDownloader/libs/
 COPY ./root/ /
-COPY ./config/default-config.json.dist /opt/JDownloader/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json.dist
+COPY ./config/default-config.json.dist /etc/JDownloader/settings.json.dist
 COPY ./scripts/configure.sh /usr/bin/configure
 
 EXPOSE 3129
