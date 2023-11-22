@@ -33,7 +33,7 @@ VOLUME /opt/JDownloader/cfg
 # hadolint ignore=DL3018,DL3019
 RUN echo "@community http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
     apk add --no-cache --upgrade openjdk8-jre ca-certificates libstdc++ ffmpeg wget jq moreutils@community && \
-    wget -q -O /opt/JDownloader/JDownloader.jar --user-agent="Github Docker Image Build (https://github.com/tuxpeople)" "http://installer.jdownloader.org/JDownloader.jar" && \
+    wget --retry-connrefused --waitretry=10 --read-timeout=20 --timeout=15 -t 30 -q -O /opt/JDownloader/JDownloader.jar --user-agent="Github Docker Image Build (https://github.com/tuxpeople)" "http://installer.jdownloader.org/JDownloader.jar" && \
     chmod +x /opt/JDownloader/JDownloader.jar && \
     chmod -R 777 /opt/JDownloader*
 

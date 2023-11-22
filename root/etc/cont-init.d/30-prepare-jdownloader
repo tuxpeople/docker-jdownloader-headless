@@ -36,7 +36,7 @@ fi
 
 # Redownload if no JDownloader exists
 if [ ! -f /opt/JDownloader/JDownloader.jar ]; then
-    wget -O /opt/JDownloader/JDownloader.jar "http://installer.jdownloader.org/JDownloader.jar"
+    wget --retry-connrefused --waitretry=10 --read-timeout=20 --timeout=15 -t 30 -O /opt/JDownloader/JDownloader.jar "http://installer.jdownloader.org/JDownloader.jar"
     chmod +x /JDownloader.jar
 fi
 
