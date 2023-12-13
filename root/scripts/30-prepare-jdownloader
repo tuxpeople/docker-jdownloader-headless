@@ -1,4 +1,4 @@
-#!/usr/bin/with-contenv sh
+#!/bin/sh
 
 SETTINGSFILE="/opt/JDownloader/cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json"
 
@@ -32,10 +32,12 @@ if [ ! -f ${SETTINGSFILE} ]; then
     cp /etc/JDownloader/settings.json.dist ${SETTINGSFILE}
 fi
 
-# Check JDownloader.jar integrity and removes it in case it's not
-jar tvf /opt/JDownloader/JDownloader.jar > /dev/null 2>&1
-if [ $? -ne 0 ]; then
-    rm /opt/JDownloader/JDownloader.jar
+# Check an existing JDownloader.jar's integrity and removes it in case it's not
+if [ -f /opt/JDownloader/JDownloader.jar ]; then
+    jar tvf /opt/JDownloader/JDownloader.jar > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        rm /opt/JDownloader/JDownloader.jar
+    fi
 fi
 
 # Check if JDownloader.jar exists, or if there is an interrupted update
@@ -45,8 +47,8 @@ fi
 
 # Redownload if no JDownloader exists
 if [ ! -f /opt/JDownloader/JDownloader.jar ]; then
-    wget --retry-connrefused --waitretry=10 --read-timeout=20 --timeout=15 -t 30 -O /opt/JDownloader/JDownloader.jar "http://installer.jdownloader.org/JDownloader.jar"
-    chmod +x /JDownloader.jar
+    wget --retry-connrefused --waitretry=10 --read-timeout=20 --timeout=15 --tries=30 -O /opt/JDownloader/JDownloader.jar "http://installer.jdownloader.org/JDownloader.jar"
+    chmod +x /opt/JDownloader/JDownloader.jar
 fi
 
 # Defines umask - should respect octal format
@@ -56,4 +58,4 @@ if echo "${UMASK}" | grep -Eq '0[0-7]{3}' ; then
 fi
 
 # Fix permissions
-chown -R abc:abc /opt/JDownloader
+#chown -R abc:users /opt/JDownloader

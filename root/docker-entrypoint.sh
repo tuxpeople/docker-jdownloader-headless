@@ -1,6 +1,11 @@
 #!/bin/sh
 
-java -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8 -Djava.awt.headless=true -jar /opt/JDownloader/JDownloader.jar -norestart
+while true; do
+    java -Dsun.jnu.encoding=UTF-8 -Dfile.encoding=UTF-8 -Djava.awt.headless=true -jar /opt/JDownloader/JDownloader.jar -norestart
+    PID=$!
+    wait $PID
+    wait $PID
 
-rm -f /opt/JDownloader/JDownloader.jar.*
-rm -f /opt/JDownloader/JDownloader.pid
+    echo "restart in 5 seconds" 
+    sleep 5
+done
