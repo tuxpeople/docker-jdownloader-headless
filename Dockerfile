@@ -1,4 +1,18 @@
-FROM ghcr.io/tuxpeople/baseimage-alpine-light:v3.19
+FROM debian:bookworm-20231120-slim as builder
+
+COPY fetcher.sh .
+
+ADD --chmod=774 http://installer.jdownloader.org/JDownloader.jar /staging/JDownloader/JDownloader.jar
+
+RUN mkdir -p /staging/JDownloader/Downloads /staging/JDownloader/cfg && \
+    useradd nonroot && \
+    chown -R nonroot:nonroot /staging/JDownloader && \
+    chmod -R 775 /staging/JDownloader && \
+    chmod g+s /staging/JDownloader
+# hadolint ignore=DL3008,DL3009
+RUN ./fetcher.sh ffmpeg wget jq moreutils
+
+FROM gcr.io/distroless/java17-debian12:debug
 
 # set args
 ARG BUILD_DATE
@@ -17,6 +31,10 @@ ENV LC_COLLATE="C"
 ENV LANGUAGE="C.UTF-8"
 ENV LC_ALL="C.UTF-8"
 
+COPY --from=builder /staging/root /
+COPY --from=builder /staging/status /var/lib/dpkg/status.d
+COPY --from=builder --chown=nonroot:nonroot /staging/JDownloader /opt/JDownloader
+
 # ARG TARGETPLATFORM
 # ARG BUILDPLATFORM
 # ARG TARGETOS
@@ -25,25 +43,18 @@ ENV LC_ALL="C.UTF-8"
 # RUN echo "I am running on $BUILDPLATFORM, building for $TARGETPLATFORM"
 # RUN echo "$TARGETPLATFORM consists of $TARGETOS, $TARGETARCH and $TARGETVARIANT"
 
-# Upgrade and install dependencies
-# hadolint ignore=DL3018,DL3019
-RUN echo "@community http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories && \
-    apk add --no-cache --upgrade openjdk8-jre ca-certificates libstdc++ ffmpeg wget jq moreutils@community && \
-    mkdir -p /opt/JDownloader/Downloads /opt/JDownloader/cfg && \
-    chown -R abc:abc /opt/JDownloader && \
-    chmod -R 775 /opt/JDownloader && \
-    chmod g+s /opt/JDownloader
 
 # archive extraction uses sevenzipjbinding library
 # which is compiled against libstdc++
-COPY --chown=abc:abc ./ressources/${TARGETARCH}/*.jar /opt/JDownloader/libs/
-COPY --chown=abc:abc --chmod=774 ./root/ /
+COPY --chown=nonroot:nonroot ./ressources/${TARGETARCH}/*.jar /opt/JDownloader/libs/
+COPY --chown=nonroot:nonroot --chmod=774 ./root/ /
 COPY --chmod=644 ./config/default-config.json.dist /etc/JDownloader/settings.json.dist
 
-USER abc
+USER nonroot
 
 WORKDIR /opt/JDownloader
 VOLUME /opt/JDownloader/Downloads
 VOLUME /opt/JDownloader/cfg
 
 EXPOSE 3129
+ENTRYPOINT ["sh", "-c", "run-parts /scripts; /docker-entrypoint.sh"]

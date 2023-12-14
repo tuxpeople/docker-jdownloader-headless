@@ -1,4 +1,7 @@
-#!/bin/sh
+#!/busybox/sh
+
+set -x
+export PATH=/usr/lib/jvm/java-17-openjdk-arm64/bin:$PATH
 
 SETTINGSFILE="/opt/JDownloader/cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json"
 
@@ -43,12 +46,6 @@ fi
 # Check if JDownloader.jar exists, or if there is an interrupted update
 if [ ! -f /opt/JDownloader/JDownloader.jar ] && [ -f /opt/JDownloader/tmp/update/self/JDU/JDownloader.jar ]; then
     cp /opt/JDownloader/tmp/update/self/JDU/JDownloader.jar /opt/JDownloader/
-fi
-
-# Redownload if no JDownloader exists
-if [ ! -f /opt/JDownloader/JDownloader.jar ]; then
-    wget --retry-connrefused --waitretry=10 --read-timeout=20 --timeout=15 --tries=30 -O /opt/JDownloader/JDownloader.jar "http://installer.jdownloader.org/JDownloader.jar"
-    chmod +x /opt/JDownloader/JDownloader.jar
 fi
 
 # Defines umask - should respect octal format
