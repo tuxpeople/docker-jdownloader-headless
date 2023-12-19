@@ -1,4 +1,4 @@
-FROM registry.eighty-three.me/tuxpeople/baseimage-alpine-light:v3.19
+FROM ghcr.io/tuxpeople/baseimage-alpine-light:v3.19
 
 # set args
 ARG BUILD_DATE
