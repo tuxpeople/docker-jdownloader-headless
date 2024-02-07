@@ -1,15 +1,24 @@
-#!/usr/bin/with-contenv sh
+#!/bin/sh
 
 SETTINGSFILE="/opt/JDownloader/cfg/org.jdownloader.api.myjdownloader.MyJDownloaderSettings.json"
 
 # Login user with env credentials - Please prefer command way
 if [ -n "${MYJD_USER}" ] && [ -n "${MYJD_PASSWORD}" ]; then
-    /usr/bin/configure "${MYJD_USER}" "${MYJD_PASSWORD}"
+    if [ ! -f ${SETTINGSFILE} ]; then
+        cp /etc/JDownloader/settings.json.dist ${SETTINGSFILE}
+    fi
+
+    jq --arg v "${MYJD_PASSWORD}" '.password = $v' ${SETTINGSFILE} | sponge ${SETTINGSFILE}
+    jq --arg v "${MYJD_USER}" '.email = $v' ${SETTINGSFILE} | sponge ${SETTINGSFILE}
+
+    pkill -f "JDownloader"
 fi
 
 # Defining device name to jdownloader interface - please prefer this method than changing on MyJDownloader to keep correct binding
 if [ -n "${MYJD_DEVICE_NAME}" ]; then
     jq --arg v "${MYJD_DEVICE_NAME}" '.devicename = $v' ${SETTINGSFILE} | sponge ${SETTINGSFILE}
+
+    pkill -f "JDownloader"
 fi
 
 # Debugging helper - if the container crashes, create a file called "jdownloader-block.txt" in the download folder
@@ -23,10 +32,12 @@ if [ ! -f ${SETTINGSFILE} ]; then
     cp /etc/JDownloader/settings.json.dist ${SETTINGSFILE}
 fi
 
-# Check JDownloader.jar integrity and removes it in case it's not
-jar tvf /opt/JDownloader/JDownloader.jar > /dev/null 2>&1
-if [ $? -ne 0 ]; then
-    rm /opt/JDownloader/JDownloader.jar
+# Check an existing JDownloader.jar's integrity and removes it in case it's not
+if [ -f /opt/JDownloader/JDownloader.jar ]; then
+    jar tvf /opt/JDownloader/JDownloader.jar > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        rm /opt/JDownloader/JDownloader.jar
+    fi
 fi
 
 # Check if JDownloader.jar exists, or if there is an interrupted update
@@ -36,8 +47,8 @@ fi
 
 # Redownload if no JDownloader exists
 if [ ! -f /opt/JDownloader/JDownloader.jar ]; then
-    wget -O /opt/JDownloader/JDownloader.jar "http://installer.jdownloader.org/JDownloader.jar"
-    chmod +x /JDownloader.jar
+    wget --retry-connrefused --waitretry=10 --read-timeout=20 --timeout=15 --tries=30 -O /opt/JDownloader/JDownloader.jar "http://installer.jdownloader.org/JDownloader.jar"
+    chmod +x /opt/JDownloader/JDownloader.jar
 fi
 
 # Defines umask - should respect octal format
@@ -47,4 +58,4 @@ if echo "${UMASK}" | grep -Eq '0[0-7]{3}' ; then
 fi
 
 # Fix permissions
-chown -R abc:abc /opt/JDownloader
+#chown -R abc:users /opt/JDownloader
