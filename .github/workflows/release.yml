@@ -45,7 +45,7 @@ jobs:
         name: Bump version and push tag if needed
         id: tag_version
         if: github.event_name == 'push'
-        uses: mathieudutour/github-tag-action@v6.1
+        uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           default_bump: false
@@ -101,7 +101,7 @@ jobs:
           dockerfile: Dockerfile
       -
         name: Set up QEMU
-        uses: docker/setup-qemu-action@v3.0.0
+        uses: docker/setup-qemu-action@v3.2.0
       -
         name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -115,7 +115,7 @@ jobs:
       -
         name: Build and push
         id: docker_build
-        uses: docker/build-push-action@v5.1.0
+        uses: docker/build-push-action@v6.6.0
         with:
           context: .
           file: ./Dockerfile
@@ -134,6 +134,13 @@ jobs:
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.licenses=${{ github.event.repository.license.spdx_id }}
+      -
+        name: Install latest Skopeo # GitHub's ubuntu 22 uses Skopeo 1.4 but we need newer to fix the "unsupported MIME type for compression: application/vnd.in-toto+json" error
+        run: |
+          echo 'deb http://download.opensuse.org/repositories/home:/alvistack/xUbuntu_22.04/ /' | sudo tee /etc/apt/sources.list.d/home:alvistack.list
+          curl -fsSL https://download.opensuse.org/repositories/home:alvistack/xUbuntu_22.04/Release.key | gpg --dearmor | sudo tee /etc/apt/trusted.gpg.d/home_alvistack.gpg > /dev/null
+          sudo apt update
+          sudo apt -o Dpkg::Options::="--force-overwrite" install skopeo
       -
         name: Copy to Docker Hub
         id: copy_images
