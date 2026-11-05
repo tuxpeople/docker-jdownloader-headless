@@ -1,3 +1,10 @@
+> [!IMPORTANT]
+> **This repository has moved.** The image is now built in **[tuxpeople/oci-containers](https://github.com/tuxpeople/oci-containers/tree/main/images/jdownloader-headless)**: see the [new README](https://github.com/tuxpeople/oci-containers/blob/main/images/jdownloader-headless/README.md), and please open new issues [there](https://github.com/tuxpeople/oci-containers/issues).
+>
+> The image names stay the same (`tdeutsch/jdownloader-headless`, `ghcr.io/tuxpeople/jdownloader-headless`), so `latest` keeps getting updates. **Version 2.0.0 no longer runs as root**: make your volumes writable for UID 1000 or set `--user`, see [Upgrade from 1.x](https://github.com/tuxpeople/oci-containers/blob/main/images/jdownloader-headless/README.md#upgrade-from-1x).
+>
+> This repository is archived and no longer maintained.
+
 # jdownloader-headless
 ![Github Workflow Badge](https://github.com/tuxpeople/docker-jdownloader-headless/actions/workflows/release.yml/badge.svg)
 ![Github Last Commit Badge](https://img.shields.io/github/last-commit/tuxpeople/docker-jdownloader-headless)
